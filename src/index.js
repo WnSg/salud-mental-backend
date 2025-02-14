@@ -1,19 +1,21 @@
 const express = require('express');
-const { sequelize } = require('./config/db');
 const userRoutes = require('./routes/userRoutes');
+require('dotenv').config();
+const sequelize = require('./config/db');
 
 const app = express();
 
-// Middlewares
+// Middleware para parsear JSON
 app.use(express.json());
 
 // Rutas
 app.use('/users', userRoutes);
 
 // Conexión a la base de datos
-sequelize.sync()
-  .then(() => console.log('Conexión exitosa a la base de datos'))
-  .catch((error) => console.error('Error al conectar la base de datos:', error));
+sequelize
+  .sync()
+  .then(() => console.log('Base de datos sincronizada correctamente.'))
+  .catch((err) => console.error('Error al sincronizar la base de datos:', err));
 
 // Iniciar servidor
 const PORT = process.env.PORT || 3000;
