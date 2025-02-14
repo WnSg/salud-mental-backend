@@ -80,6 +80,11 @@ const getUser = async (req, res) => {
   try {
     const { id } = req.params;
 
+    // Verificar si el usuario autenticado está accediendo a su propio ID
+    if (req.user.id !== parseInt(id, 10)) {
+      return res.status(403).json({ message: 'Acceso no autorizado.' });
+    }
+
     // Buscar usuario por ID
     const user = await User.findByPk(id);
     if (!user) {
@@ -98,6 +103,11 @@ const updateUser = async (req, res) => {
   try {
     const { id } = req.params;
     const { first_name, last_name, age, gender, nationality } = req.body;
+
+    // Verificar si el usuario autenticado está actualizando su propio ID
+    if (req.user.id !== parseInt(id, 10)) {
+      return res.status(403).json({ message: 'Acceso no autorizado.' });
+    }
 
     // Buscar usuario por ID
     const user = await User.findByPk(id);
@@ -119,6 +129,11 @@ const updateUser = async (req, res) => {
 const deleteUser = async (req, res) => {
   try {
     const { id } = req.params;
+
+    // Verificar si el usuario autenticado está eliminando su propio ID
+    if (req.user.id !== parseInt(id, 10)) {
+      return res.status(403).json({ message: 'Acceso no autorizado.' });
+    }
 
     // Buscar usuario por ID
     const user = await User.findByPk(id);
