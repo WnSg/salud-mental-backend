@@ -14,12 +14,12 @@ app.use(express.json());
 // Middleware para habilitar CORS
 // Permitir solicitudes desde tu frontend (React)
 app.use(
-    cors({
-      origin: 'http://localhost:3000', // Reemplaza con la URL de tu frontend en producción si es necesario
-      methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos HTTP permitidos
-      allowedHeaders: ['Content-Type', 'Authorization'], // Cabeceras permitidas
-    })
-  );
+  cors({
+    origin: 'http://localhost:3000', // Reemplaza con la URL de tu frontend en producción si es necesario
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos HTTP permitidos
+    allowedHeaders: ['Content-Type', 'Authorization'], // Cabeceras permitidas
+  })
+);
 
 // Rutas
 app.use('/users', userRoutes);
