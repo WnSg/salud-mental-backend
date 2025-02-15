@@ -1,4 +1,5 @@
 const Resource = require('../models/resourceModel');
+const { Op } = require('sequelize');
 
 // Crear recurso educativo (Ruta protegida)
 exports.createResource = async (req, res) => {
@@ -27,7 +28,11 @@ exports.getResourcesByCategory = async (req, res) => {
     const { category } = req.query;
 
     const resources = await Resource.findAll({
-      where: { category },
+      where: {
+        category: {
+          [Op.iLike]: `%${category}%`, // Realiza una búsqueda insensible a mayúsculas y minúsculas
+        },
+      },
       attributes: [
         'id',
         'title',
