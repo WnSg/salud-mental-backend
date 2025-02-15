@@ -4,11 +4,22 @@ const resourceRoutes = require('./routes/resourceRoutes');
 const helpLineRoutes = require('./routes/helpLineRoutes');
 require('dotenv').config();
 const sequelize = require('./config/db');
+const cors = require('cors');
 
 const app = express();
 
 // Middleware para parsear JSON
 app.use(express.json());
+
+// Middleware para habilitar CORS
+// Permitir solicitudes desde tu frontend (React)
+app.use(
+    cors({
+      origin: 'http://localhost:3000', // Reemplaza con la URL de tu frontend en producción si es necesario
+      methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos HTTP permitidos
+      allowedHeaders: ['Content-Type', 'Authorization'], // Cabeceras permitidas
+    })
+  );
 
 // Rutas
 app.use('/users', userRoutes);
