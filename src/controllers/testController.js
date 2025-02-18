@@ -1,10 +1,22 @@
 const { Test, Question, Answer, UserTest } = require('../models/testModel');
 
-// Obtener las preguntas y respuestas del test de ansiedad
+// Obtener la lista de tests con id y título
+exports.getTests = async (req, res) => {
+  try {
+    const tests = await Test.findAll({ attributes: ['id', 'title'] });
+    res.json(tests);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al obtener los tests' });
+  }
+};
+
+// Obtener las preguntas y respuestas del test seleccionado
 exports.getTest = async (req, res) => {
   try {
+    const { id } = req.params;
     const test = await Test.findOne({
-      where: { title: 'Test de Ansiedad' },
+      where: { id },
       include: [{ model: Question, include: [Answer] }],
     });
 
@@ -22,7 +34,7 @@ exports.getTest = async (req, res) => {
 // Guardar el resultado del test
 exports.submitAnswers = async (req, res) => {
   try {
-    const { userId, answers } = req.body;
+    const { userId, testId, answers } = req.body;
     let score = 0;
 
     for (const answerId of answers) {
@@ -36,7 +48,7 @@ exports.submitAnswers = async (req, res) => {
 
     const userTest = await UserTest.create({
       fk_user_id: userId,
-      fk_test_id: 1,
+      fk_test_id: testId,
       result,
     });
     res.json(userTest);
