@@ -2,6 +2,7 @@ const express = require('express');
 const userRoutes = require('./routes/userRoutes');
 const resourceRoutes = require('./routes/resourceRoutes');
 const helpLineRoutes = require('./routes/helpLineRoutes');
+const testRoutes = require('./routes/testRoutes');
 require('dotenv').config();
 const sequelize = require('./config/db');
 const cors = require('cors');
@@ -25,6 +26,7 @@ app.use(
 app.use('/users', userRoutes);
 app.use('/resources', resourceRoutes);
 app.use('/helplines', helpLineRoutes);
+app.use('/test', testRoutes);
 
 // Conexión a la base de datos
 sequelize
