@@ -4,7 +4,7 @@ const resourceRoutes = require('./routes/resourceRoutes');
 const helpLineRoutes = require('./routes/helpLineRoutes');
 const testRoutes = require('./routes/testRoutes');
 require('dotenv').config();
-const sequelize = require('./config/db');
+const { sequelize, connectDB } = require('./config/db');
 const cors = require('cors');
 
 const app = express();
@@ -13,12 +13,11 @@ const app = express();
 app.use(express.json());
 
 // Middleware para habilitar CORS
-// Permitir solicitudes desde tu frontend (React)
 app.use(
   cors({
     origin: 'http://localhost:3000', // Reemplaza con la URL de tu frontend en producción si es necesario
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos HTTP permitidos
-    allowedHeaders: ['Content-Type', 'Authorization'], // Cabeceras permitidas
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   })
 );
 
@@ -28,12 +27,18 @@ app.use('/resources', resourceRoutes);
 app.use('/helplines', helpLineRoutes);
 app.use('/test', testRoutes);
 
-// Conexión a la base de datos
-sequelize
-  .sync()
-  .then(() => console.log('Base de datos sincronizada correctamente.'))
-  .catch((err) => console.error('Error al sincronizar la base de datos:', err));
+// Conectar a la base de datos solo si no estamos en pruebas
+connectDB();
 
-// Iniciar servidor
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Servidor corriendo en el puerto ${PORT}`));
+if (!process.env.JEST_WORKER_ID) { 
+  sequelize
+    .sync()
+    .then(() => console.log('✅ Base de datos sincronizada correctamente.'))
+    .catch((err) => console.error('❌ Error al sincronizar la base de datos:', err));
+
+  // Iniciar servidor solo si no estamos en Jest
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => console.log(`🚀 Servidor corriendo en el puerto ${PORT}`));
+}
+
+module.exports = app;

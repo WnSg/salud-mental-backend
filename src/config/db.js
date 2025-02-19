@@ -10,13 +10,18 @@ const sequelize = new Sequelize(process.env.DATABASE_URL, {
       rejectUnauthorized: false, // Permite conexiones con certificados no verificados
     },
   },
+  logging: process.env.NODE_ENV !== 'test', // Desactiva logs en modo test
 });
 
-sequelize
-  .authenticate()
-  .then(() => console.log('Conexión a la base de datos exitosa.'))
-  .catch((error) =>
-    console.error('Error al conectar a la base de datos:', error)
-  );
+const connectDB = async () => {
+  if (process.env.NODE_ENV !== 'test') { // Evita conexión innecesaria en pruebas
+    try {
+      await sequelize.authenticate();
+      console.log('✅ Conexión a la base de datos exitosa.');
+    } catch (error) {
+      console.error('❌ Error al conectar a la base de datos:', error);
+    }
+  }
+};
 
-module.exports = sequelize;
+module.exports = { sequelize, connectDB };
