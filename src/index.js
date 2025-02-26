@@ -15,7 +15,7 @@ app.use(express.json());
 // Middleware para habilitar CORS
 app.use(
   cors({
-    origin: 'http://localhost:3000', // Reemplaza con la URL de tu frontend en producción si es necesario
+    origin: ['http://localhost:3000', 'https://salud-mental-frontend.vercel.app'], // Permitir localhost y Vercel, // Reemplaza con la URL de tu frontend en producción si es necesario
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   })
